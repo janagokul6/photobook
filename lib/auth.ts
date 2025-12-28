@@ -90,7 +90,7 @@ export const authOptions: NextAuthOptions = {
 
           // Check if we already have a token with refresh_token
           const existingToken = await Token.getToken('googledrive');
-          
+
           // Use existing refresh_token if new one not provided, or use new one
           const refreshTokenToUse = account.refresh_token || existingToken?.refreshToken;
 
@@ -139,7 +139,7 @@ export const authOptions: NextAuthOptions = {
 
           // Check if we already have a token with refresh_token
           const existingToken = await Token.getToken('googlephotos');
-          
+
           // Use existing refresh_token if new one not provided, or use new one
           const refreshTokenToUse = account.refresh_token || existingToken?.refreshToken;
 
@@ -221,7 +221,32 @@ export const authOptions: NextAuthOptions = {
       //   }
       // }
 
+      // Allow sign-in to proceed
       return true;
+    },
+    async redirect({ url, baseUrl }) {
+      // Handle redirect after sign-in
+      console.log('🔄 NextAuth Redirect Callback');
+      console.log('- url:', url);
+      console.log('- baseUrl:', baseUrl);
+
+      // If url is relative, prepend baseUrl
+      if (url.startsWith('/')) {
+        const redirectUrl = `${baseUrl}${url}`;
+        console.log('- Redirecting to:', redirectUrl);
+        return redirectUrl;
+      }
+
+      // If url already contains baseUrl, use it
+      if (url.startsWith(baseUrl)) {
+        console.log('- Redirecting to:', url);
+        return url;
+      }
+
+      // Default to dashboard
+      const defaultUrl = `${baseUrl}/admin/dashboard`;
+      console.log('- Redirecting to default:', defaultUrl);
+      return defaultUrl;
     },
     async jwt({ token, user, account }) {
       if (user) {

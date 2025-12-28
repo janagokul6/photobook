@@ -21,12 +21,14 @@ export default function LoginPage() {
         username,
         password,
         redirect: false,
+        callbackUrl: '/admin/dashboard',
       });
 
       if (result?.error) {
         setError('Invalid username or password');
-      } else {
-        router.push('/admin/dashboard');
+      } else if (result?.ok) {
+        // Use window.location for full page reload to ensure session is established
+        window.location.href = '/admin/dashboard';
       }
     } catch (err) {
       setError('An error occurred during login');
@@ -102,7 +104,7 @@ export default function LoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter username"
               />
             </div>
@@ -116,7 +118,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter password"
               />
             </div>
